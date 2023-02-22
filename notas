@@ -1,0 +1,109 @@
+git init -> Comando para inicializar proyecto git (crea base de datos donde se almacenan los cambios y otros archivos, dentro de la carpeta '.git')
+git add <file name> -> Agrega un archivo al stage (espacio donde git almacena temporalmente los cambios, para luego ser llevados al repositorio)
+git add . -> Agrega todos los archivos al stage.
+git show -> Mustra el detalle del último commit.
+git log <file name> -> Muestra la lista de cambios de un archivo.
+git push <remote origin> <remote branch> -> Envía los cambios a un espacio remoto.
+
+GIT cuenta con los siguientes estados:
+    -untracked (local): Aquí los archivos NO son monitoreados por GIT.
+    -tracked: Aquí los archivos son monitoreados por GIT.
+        *staged (memoria): Espacio donde de agregan archivos nuevos y son trabajados en memoria.
+        *committed (respository): Espacio donde se guardan archivos validados y son almacenados en base de datos GIT.
+        *modified: Espacio donde se listan archivos previamente guardados en base de datos GIT y han sido modificados.
+El flujo de los archivos sobre los distintos estados en GIT es:
+    untracked -[add]-> staged -[commit]-> committed -[edit]-> midified
+    modified -[staged file for commit]-> staged
+    committed -[reset]-> untracked
+
+git rm --cached <file name> -> Elimina un archivo del repositorio o staging.
+git restore <file name> -> Reestablece los cambios de un archivo en estado modified/untracked.
+git restore --staged <file name> -> Reestablece los cambios de un archivo modificado en estado staged.
+git show <file name> -> Describe el detalle de cambios del último commit para un archivo.
+git diff <commit id 1> <commit id 2> -> Mustra la diferencia entre dos commit.
+
+Branch: Son ramas almacenadas en el repositorio de GIT, donde se mantianen las distintas versiones del proyecto.
+Generalmente en el desarrollo de software, exiten las siguientes ramas (branch):
+    -main (master): Rama principal, donde se tiene el código en estado de producción.
+    -development: Rama experimental, generalmente derivada de la rama main, donde suelen dearrollarsen nuevas características.
+    -hotfix: Rama en la cual se solucionan problemas de la rama main, sin intervenir directamente el código en producción.
+
+git branch -> Lista las ramas existentes.
+git branch -r -> Lista las ramas remotas existentes.
+git branch -a -> Lista todas las ramas existentes incluso las remotas.
+git branch <new branch> -> Crea una nueva rama a partir de la actual, de manera local.
+git branch -d <branch name> -> Elimina una rama de manera local.
+git branch -D <branch name> -> Elimina de manera forzada, una rama local.
+git push <remote origin> -d <remote branch> -> Elimina una rama del repositorio remoto.
+git checkout <brach name> -> Sirve para trasladarse a la rama en mención.
+git checkout <commit id> <file name> -> Trae un archivo del pasado.
+git reset <commit id> --hard -> Reestablece el proyecto al commit en mención, perdiendo el staging y los commits posteriores a ese.
+git reset <commit id> --soft -> Reestablece el proyecto al commit en mención, conservando el stagin y perdiendo los commits posteriores a ese.
+
+git merge <branch name> -> Une los cambios de otra rama al HEAD.
+Al existir conflictos cuando se hace un merge:
+git log --merge -> Muestra los commits de las respectivas ramas que presentan conflicto en un merge.
+git log --merge -p -> Muestra con detalle los commits de las respectivas ramas que presentan conflicto en un merge.
+git ls-files <file name> -> Muestra cuantas versiones hay de un archivo en memoria durante un conflicto.
+git show :1:<file name> -> Muestra el contenido del archivo con conflicto en su versión antes del merge.
+git show :2:<file name> -> Muestra el contenido del archivo con conflicto en la versión del HEAD antes del merge.
+git show :3:<file name> -> Muestra el contenido del archivo con conflicto en la versión de la rama a unir, antes del merge.
+git merge --abort -> Deshace un merge cuando existen conflictos.
+
+git shortlog -> Muestra un breve resumen de los commits.
+git shortlog -sn -> Muestra la cantidad de commits por persona.
+git shortlog -sn --all -> Muestra la cantidad de commits por persona, incluyendo los eliminados.
+git shortlog -sn --no-merges -> Muestra la cantidad de commits por persona sin incluir los merges.
+git shortlog -sn --merges -> Muestra la cantidad de commits merges por persona.
+git log --oneline -> Muestra en una linea, la lista de commits.
+git log --graph -> Permite ver gráficamente la historia de commits en ramas.
+git log --stat -> Muestra de manear muy resumida, los cambios de los archivos en cada commit.
+git log --decorate[=short|full|auto|no] -> Se indica cómo se quiere ver las referencias de commits.
+git reflog -> Muestra el detalle de todos los pasos realizados, incluso si hemos hecho un 'reset --hard' en la historia.
+git blame <file name> -> Muestra detalle de responsables de cambio por cada linea.
+git blame -c <file name> -> Muestra con mejor indentación, el detalle de responsables de cambio por cada linea.
+git blame <file name> L10,20 -> Muestra detalle de responsables de cambio por cada linea en un rango de lineas.
+
+Las etiquetas (tag), sirve para definir versiones específicas del código.
+git tag -> Lista las etiquetas creadas.
+git tag <tag name> -m "<message>" <commit id> -> Crea una etiqueta y se le asigna a un commit.
+git push <remote origin> --tags -> Envia todos los tag al repositorio remoto.
+git tag -d <tag name> -> Elimina un tag de manera local.
+git push <remote origin> :refs/tags/<tag name> -> Elimina un tag en el reporitorio remoto.
+git show --tags -> Muestra información de los tags.
+git show-ref -> Muestra detalle de las referencias.
+
+git rebase <branch name> -> Mueve el orden de relación entre commits de dos ramas, desde el primer commit de una rama, al último commit de la otra.
+Ejemplo: Estando desde la rama 'test'
+
+  > git rebase main
+
+test        t1--t2--t3   |               t1--t2--t3
+           /             |              /
+main    --m1--m2--m3     |   --m1--m2--m3
+
+Nota importante: El comando 'rebase' solo debería usuarse en entornos locales ya que cambia la historia del proyecto y podría generar muchas confusiones.
+
+git stash -> Guarda en memoria todos los cambios que no se han agregado todavía al stagin.
+git stash pop -> Trae los cambios que se habían guardado en memoria del stash.
+git stash list -> Lista los cambios almacenado en memoria del stash.
+git stash branch <branch name> -> Crea una nueva rama y agrega los cambios almacenados en memoria del stash.
+git stash drop -> Limpia (elimina) los cambios almacenados en la memoria del stash.
+
+git clean --dry-run -> Lista todos los cambios untracked que puede eliminar.
+git clean -f -> Elimina todos los cambios untraked.
+git clean -df -> Elimina todos los cambios untracked incluyendo los que están dentro de directorios.
+
+git cherry-pick <commit id> -> Copia los cambios de un commit y los coloca delante del último commit desde la rama en la que se ejecuta.
+Ejemplo: Estando en la rama 'main'
+
+    >git cherry-pick t2
+
+test        t1--t2--t3   |       t1--t2--t3
+           /             |      /
+main    --m1--m2--m3     |   --m1--m2--m3--t2
+
+git commit --amend -> Agrega los cambios en el último commit guardado y permite modificar el mensaje de dicho commit.
+
+Para crear alias globales, se hace de la siguiente manera:
+git config --global alias.<alias name> "<command>"
